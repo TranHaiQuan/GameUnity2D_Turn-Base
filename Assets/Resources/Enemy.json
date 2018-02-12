@@ -1,0 +1,31 @@
+{
+  "level1": {
+    "damageMax": "15",
+    "damageMin": "10",
+    "hp": "15",
+    "questions": "2",
+	"enemies" : "2"
+  },
+  "level2": {
+    "damageMax": "17",
+    "damageMin": "12",
+    "hp": "15",
+    "questions": "3",
+	"enemies" : "3"
+  },
+  "level3": {
+    "damageMax": "20",
+    "damageMin": "15",
+    "hp": "17",
+    "questions": "4",
+	"enemies" : "4"
+  },
+  "level4": {
+    "damageMax": "10",
+    "damageMin": "15",
+    "hp": "17",
+    "questions": "5",
+	"enemies" : "5"
+  }
+
+}

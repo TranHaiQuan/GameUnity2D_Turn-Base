@@ -1,0 +1,163 @@
+fileFormatVersion: 2
+guid: 751265916cdbc8742acba6cb4c64d051
+timeCreated: 1518105425
+licenseType: Pro
+TextureImporter:
+  fileIDToRecycleName: {}
+  serializedVersion: 4
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: -1
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 494, y: 98, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  platformSettings:
+  - buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: Standalone
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: iPhone
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: Android
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: Windows Store Apps
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites: []
+    outline:
+    - - {x: 301, y: -243.5}
+      - {x: 294, y: -229.5}
+      - {x: 282, y: -213.5}
+      - {x: 255, y: -194.5}
+      - {x: 321, y: -162.5}
+      - {x: 329, y: -147.5}
+      - {x: 457, y: -98.5}
+      - {x: 471, y: -68.5}
+      - {x: 471, y: -60.5}
+      - {x: 466, y: -58.5}
+      - {x: 434, y: -51.5}
+      - {x: 303, y: -108.5}
+      - {x: 294, y: -98.5}
+      - {x: 257, y: -42.5}
+      - {x: 291, y: -63.5}
+      - {x: 310, y: -57.5}
+      - {x: 335, y: -37.5}
+      - {x: 340, y: 7.5}
+      - {x: 369, y: -0.5}
+      - {x: 375, y: 17.5}
+      - {x: 370, y: 57.5}
+      - {x: 390, y: 57.5}
+      - {x: 392, y: 65.5}
+      - {x: 389, y: 69.5}
+      - {x: 377, y: 114.5}
+      - {x: 377, y: 152.5}
+      - {x: 373, y: 175.5}
+      - {x: 369, y: 190.5}
+      - {x: 353, y: 222.5}
+      - {x: 293, y: 262.5}
+      - {x: 278, y: 256.5}
+      - {x: 225, y: 264.5}
+      - {x: 214, y: 357.5}
+      - {x: 198, y: 362.5}
+      - {x: 177, y: 362.5}
+      - {x: 141, y: 351.5}
+      - {x: 106, y: 325.5}
+      - {x: 75, y: 290.5}
+      - {x: 57, y: 249.5}
+      - {x: 49, y: 206.5}
+      - {x: 56, y: 153.5}
+      - {x: 69, y: 91.5}
+      - {x: 56, y: 74.5}
+      - {x: 63, y: 18.5}
+      - {x: 92, y: -3.5}
+      - {x: 119, y: -11.5}
+      - {x: 113, y: -43.5}
+      - {x: 88, y: -56.5}
+      - {x: 57, y: -64.5}
+      - {x: 39, y: -82.5}
+      - {x: 25, y: -109.5}
+      - {x: 25, y: -152.5}
+      - {x: 29, y: -170.5}
+      - {x: 50, y: -199.5}
+      - {x: 67, y: -208.5}
+      - {x: 98, y: -210.5}
+      - {x: 130, y: -204.5}
+      - {x: 125, y: -246.5}
+      - {x: 130, y: -275.5}
+      - {x: 239, y: -275.5}
+      - {x: 241, y: -265.5}
+      - {x: 297, y: -263.5}
+      - {x: 300, y: -262.5}
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
