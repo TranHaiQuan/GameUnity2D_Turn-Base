@@ -20,11 +20,12 @@ public class Boss : MonoBehaviour {
 		player = GameObject.FindGameObjectWithTag("Hero").GetComponent<Player>();
 		gameManager = GameObject.FindGameObjectWithTag ("GameManager").GetComponent<GameManager> ();
 		anim = GetComponent<Animator> ();
-		originPos = this.gameObject.transform.position;
+		originPos = posBossEnd.transform.position;
 	}
 	void OnEnable(){
 		StartCoroutine (WaitForMoveToEnd ());
 	}
+
 	IEnumerator WaitForMoveToEnd(){
 		anim.SetBool ("isRun", true);
 		while (gameObject.transform.position.x != posBossEnd.transform.position.x) {
@@ -33,6 +34,7 @@ public class Boss : MonoBehaviour {
 			yield return new WaitForFixedUpdate ();
 		}
 		anim.SetBool ("isRun", false);
+		gameManager.LoadDataForBoss ("Boss");
 	}
 	public void StartAction(){
 		Debug.Log (isCollisionWithPlayer());
@@ -118,11 +120,9 @@ public class Boss : MonoBehaviour {
 		}
 	}
 
-
-
 	void FinishWave(){
 		isAttacked = false;
-		gameManager.ChangeCurrentEnemy ();
+//		gameManager.ChangeCurrentEnemy ();
 	}
 
 	void Shoot(){
@@ -140,8 +140,8 @@ public class Boss : MonoBehaviour {
 			isFinishAttack = true;
 			gameManager.isFinishWave = true;
 			gameManager.ShowQuestion ();
-			FinishWave ();
 			yield return new WaitForFixedUpdate ();
 		}
+		FinishWave ();
 	}
 }

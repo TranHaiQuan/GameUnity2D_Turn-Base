@@ -126,8 +126,9 @@ public class Enemy : MonoBehaviour {
 			isFinishAttack = true;
 			gameManager.isFinishWave = true;
 			gameManager.ShowQuestion ();
-			FinishWave ();
+
 			yield return new WaitForFixedUpdate ();
 		}
+		FinishWave ();
 	}
 }

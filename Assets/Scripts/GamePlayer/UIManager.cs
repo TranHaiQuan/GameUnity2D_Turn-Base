@@ -7,6 +7,17 @@ public class UIManager : MonoBehaviour {
 
 	
 	AudioSource audioGame;
+	public GameObject[] choosedDiff;
+
+	void Awake(){
+		if (PlayerPrefs.HasKey ("difficulty")) {
+			SetActiveChoose ();
+		} else {
+			PlayerPrefs.SetString ("difficulty", "Easy");
+			choosedDiff [0].SetActive (true);
+		}
+	}
+
 	void Start(){
 		audioGame = GetComponent<AudioSource> ();
 	}
@@ -36,4 +47,20 @@ public class UIManager : MonoBehaviour {
 		}
 	}
 
+	public void ChooseDifficulty(GameObject thisObject){
+		if (PlayerPrefs.GetString ("difficulty") != thisObject.name) {
+			PlayerPrefs.SetString ("difficulty", thisObject.name);
+			SetActiveChoose ();
+		}
+	}
+
+	void SetActiveChoose(){
+		for (int i = 0; i < choosedDiff.Length; i++) {
+			if (choosedDiff [i].transform.parent.name == PlayerPrefs.GetString ("difficulty")) {
+				choosedDiff [i].SetActive (true);
+			} else {
+				choosedDiff [i].SetActive (false);
+			}
+		}
+	}
 }

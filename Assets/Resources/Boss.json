@@ -1,0 +1,26 @@
+{
+  "level1": {
+    "damageMax": "30",
+    "damageMin": "20",
+    "hp": "15",
+    "questions": "1"
+  },
+  "level2": {
+    "damageMax": "35",
+    "damageMin": "25",
+    "hp": "15",
+    "questions": "2"
+  },
+  "level3": {
+    "damageMax": "45",
+    "damageMin": "35",
+    "hp": "17",
+    "questions": "3"
+  },
+  "level4": {
+    "damageMax": "50",
+    "damageMin": "40",
+    "hp": "17",
+    "questions": "4"
+  }
+}

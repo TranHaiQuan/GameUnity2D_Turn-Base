@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour {
 	public Text questionTxt;
 	public Text[] answerOptions;
 	public List<int> questionIndexList;
-	JsonData qaData, enemyData;
+	JsonData qaData, enemyData, bossData;
 	public string answerExactly;
 	Player player;
 	public bool isDead;
@@ -36,36 +36,37 @@ public class GameManager : MonoBehaviour {
 	public int indexLevel;
 	public GameObject boss;
 	public GameObject posBossStart;
-//	public string difficulty;
+	string difficulty;
+	public bool isBoss;
+	bool isFirstBoss;
 //	string linkApi = "https://opentdb.com/api.php?amount=50&difficulty=medium";
 	void Awake (){
+		difficulty = PlayerPrefs.GetString ("difficulty");
 		if (PlayerPrefs.HasKey("currentLevel")) {
 			indexLevel = PlayerPrefs.GetInt ("currentLevel");
 		}
 		levelChoosed = PlayerPrefs.GetInt ("levelChoosed");
 		player = GameObject.FindGameObjectWithTag ("Hero").GetComponent<Player> ();
 		isFinishWave = true;
-		LoadJson ();
-		AddAllQuestionIndex (levelChoosed + 1);
-		ShowQuestion ();
+		LoadDataForBoss ("");
 	}
 	void Start () {
 		levelChoosed = 1;
-		LoadParameterEnemy (1);
+		LoadParameterEnemy (levelChoosed);
 		SetPositionForEnemy (totalEnemy);
 //		StartCoroutine (Request ());
-	}
-	
-	void Update () {
-		
 	}
 
 	public void ChangeCurrentEnemy(){
 		if (isChoosed && isFinishWave) {
-			SetCurrentEnemy ();
-
+			if (!isBoss) {
+				SetCurrentEnemy (enemyList [indexCurrentEnemy]);
+			} else {
+				SetCurrentEnemy (boss);
+			}
 		}
 	}
+
 
 	public void MyAnswer(GameObject thisAnswer){
 		if (isFinishWave) {
@@ -74,25 +75,36 @@ public class GameManager : MonoBehaviour {
 			CheckAnswer (thisAnswer.transform.GetChild (0).gameObject.GetComponent<Text> ().text);
 			isChoosed = true;
 			isFinishWave = false;
-			indexCurrentEnemy++;
-			if (indexCurrentEnemy >= enemyList.Count) {
-				indexCurrentEnemy = 0;
+
+			if (!isBoss) {
+				indexCurrentEnemy++;
+				if (indexCurrentEnemy >= enemyList.Count) {
+					indexCurrentEnemy = 0;
+				}
+				currentEnemy.GetComponent<Enemy> ().StartAction ();
+				questionAnwsered++;
+				if (questionAnwsered >= totalQuestion && !isDead) {
+					isBoss = true;
+				}
+			} else {
+				currentEnemy.GetComponent<Boss> ().StartAction ();
 			}
-			currentEnemy.GetComponent<Enemy> ().StartAction ();
-			questionAnwsered++;
+
 		}
 	}
 
 	public void CheckLimitQuestion(){
-		if (questionAnwsered >= totalQuestion && !isDead) {
+		if (questionAnwsered >= totalQuestion && !isDead && !isFirstBoss) {
 			boss.SetActive (true);
+			LoadParameterBoss (levelChoosed);
 			boss.transform.position = posBossStart.transform.position;
+			isFirstBoss = true;
 			StartCoroutine (BlinkSprite ());
 		}
 	}
 
 	IEnumerator BlinkSprite(){
-		yield return new WaitForSeconds (2);
+		yield return new WaitForSeconds (1f);
 		for (int i = 0; i < enemyList.Count; i++) {
 			enemyList [i].GetComponent<SpriteRenderer>().enabled = false;
 		}
@@ -128,13 +140,15 @@ public class GameManager : MonoBehaviour {
 			enemyArr [i].transform.position = posEnemyArr [i].transform.position;
 			enemyList.Add (enemyArr [i]);
 		}
-		SetCurrentEnemy ();
+		SetCurrentEnemy (enemyList [indexCurrentEnemy]);
 	}
-	void SetCurrentEnemy(){
-		currentEnemy = enemyList [indexCurrentEnemy];
+
+	void SetCurrentEnemy(GameObject _currentEnemy){
+		currentEnemy = _currentEnemy;
 		dirPlayerEnemy = currentEnemy.transform.GetChild(1).gameObject.transform.position - player.gameObject.transform.position;
 		angleKunai = Mathf.Rad2Deg * Mathf.Atan2 (dirPlayerEnemy.y, dirPlayerEnemy.x);
 		Debug.Log ("Rad" +  Mathf.Atan2 (dirPlayerEnemy.y, dirPlayerEnemy.x) + "//Angle: " + angleKunai);
+		Debug.Log ("<color=black> Set current Boss: " + currentEnemy + "</color>");
 	}
 	void LoadParameterEnemy(int level){ // load chi so cua tung nac level
     string jsonStr = File.ReadAllText(Application.dataPath + "/Resources/Enemy.json");
@@ -145,8 +159,18 @@ public class GameManager : MonoBehaviour {
 		totalEnemy = int.Parse(enemyData["level" + level]["enemies"].ToString());
 		totalQuestion = int.Parse(enemyData["level" + level]["questions"].ToString());
 	}
-	void LoadJson(){
-		string jsonStr = File.ReadAllText (Application.dataPath + "/Resources/Quiz.json");
+
+	void LoadParameterBoss(int level){ // load chi so cua tung nac level
+		string jsonStr = File.ReadAllText(Application.dataPath + "/Resources/Boss.json");
+		bossData = JsonMapper.ToObject(jsonStr);
+		damageMax = int.Parse(bossData["level" + level]["damageMax"].ToString());
+		damageMin = int.Parse(bossData["level" + level]["damageMin"].ToString());
+		hp = int.Parse(bossData["level" + level]["hp"].ToString());
+		totalQuestion = int.Parse(bossData["level" + level]["questions"].ToString());
+	}
+
+	void LoadJson(string difficulty){
+		string jsonStr = File.ReadAllText (Application.dataPath + "/Resources/Quiz" + difficulty + ".json");
 		qaData = JsonMapper.ToObject (jsonStr);
 	}
 	JsonData GetData(string level, string questionNumber, string type){
@@ -154,6 +178,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	void AddAllQuestionIndex(int level){
+		questionIndexList.Clear ();
 		for (int i = 1; i <= qaData ["level" + level].Count; i++) {
 			questionIndexList.Add (i);
 		}
@@ -174,6 +199,11 @@ public class GameManager : MonoBehaviour {
 		answerExactly = GetData("level" + level, "quiz" + quesIndex, "answer").ToString ();
 	}
 
+	public void LoadDataForBoss(string bossStr){
+		LoadJson (bossStr + difficulty);
+		AddAllQuestionIndex (levelChoosed + 1);
+		ShowQuestion ();
+	}
 	void CheckAnswer(string answer){
 		if (answer == answerExactly) {
 			isAnswer = true;

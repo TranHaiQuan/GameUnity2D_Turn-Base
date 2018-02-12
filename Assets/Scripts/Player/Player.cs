@@ -15,6 +15,7 @@ public class Player : MonoBehaviour {
 	public Image hpImg;
 	public int currentHp;
 	bool _isWaitFinish;
+	public Text notice;
 	void Start () {
 		gameManager = GameObject.FindGameObjectWithTag ("GameManager").GetComponent<GameManager> ();
 		anim = GetComponent<Animator> ();
@@ -38,6 +39,11 @@ public class Player : MonoBehaviour {
 	}
 
 	public void DecreaseHp(int damageEnemy){
+		if (damageEnemy == 0) {
+			notice.text = "Miss";
+		} else {
+			notice.text = "-" + damageEnemy;
+		}
 		currentHp -= damageEnemy;
 		float _temp = (float)currentHp / hp;
 		Debug.Log ("<color=green>temp = " + _temp + "</color>");
