@@ -19,10 +19,12 @@ public class UIManager : MonoBehaviour {
 			PlayerPrefs.SetString ("difficulty", "Easy");
 			choosedDiff [0].SetActive (true);
 			difficulty = PlayerPrefs.GetString ("difficulty");
-			Debug.Log ("$$$$$$$$$$$$$$Key = " + difficulty);
 		}
 		if (PlayerPrefs.HasKey("currentLevel" + difficulty)) {
 			currentLevel = PlayerPrefs.GetInt ("currentLevel" + difficulty);
+		} else {
+			currentLevel = 0;
+			PlayerPrefs.SetInt ("currentLevel" + difficulty, currentLevel);
 		}
 		ActiveLevel (currentLevel);
 		audioGame = GetComponent<AudioSource> ();
@@ -62,10 +64,13 @@ public class UIManager : MonoBehaviour {
 			}
 		}
 		difficulty = PlayerPrefs.GetString ("difficulty");
-		if (PlayerPrefs.HasKey("currentLevel" + difficulty)) {
+		if (PlayerPrefs.HasKey ("currentLevel" + difficulty)) {
 			currentLevel = PlayerPrefs.GetInt ("currentLevel" + difficulty);
+		} else {
+			currentLevel = 0;
+			PlayerPrefs.SetInt ("currentLevel" + difficulty, currentLevel);
 		}
-		Debug.Log ("currnenenenenenen = " + currentLevel);
+		Debug.Log ("Current " + difficulty + " = " + currentLevel);
 		ActiveLevel (currentLevel);
 	}
 
@@ -76,6 +81,7 @@ public class UIManager : MonoBehaviour {
 			level [j].transform.GetChild (0).gameObject.SetActive (false);
 			level [j].transform.GetChild (2).gameObject.SetActive (true);
 		}
+
 		for (int i = 0; i <= _currentLevel; i++){
 			level [i].GetComponent<Button> ().enabled = true;
 			level [i].transform.GetChild (0).gameObject.SetActive (true);

@@ -285,6 +285,36 @@
 				"19"
 			],
 			"answer": "6"
+		},
+		"quiz8": {
+			"question": "Cây ngay không sợ chết...",
+			"options": [
+				"Đứng",
+				"Ngồi",
+				"Ngủ",
+				"Chìm"
+			],
+			"answer": "Đứng"
+		},
+		"quiz9": {
+			"question": "Hàm số nào không phải là hàm số chẵn?",
+			"options": [
+				"Cosx.Sinx",
+				"Tanx",
+				"Cosx",
+				"Sinx"
+			],
+			"answer": "Cosx.Sinx"
+		},
+		"quiz10": {
+			"question": "Miệng đồng ruột thép thẳng băng/Vặn tai miệng nhả nước văng tràn trề?",
+			"options": [
+				"Cái vòi nước",
+				"Cái dao",
+				"Ống đạn",
+				"Ổ cứng"
+			],
+			"answer": "Cái vòi nước"
 		}
 	},
 	"level5": {
@@ -357,6 +387,26 @@
 				"19"
 			],
 			"answer": "6"
+		},
+		"quiz8": {
+			"question": "Liên đoàn bóng đá Úc thuộc liên đoàn bóng đá nào??",
+			"options": [
+				"Châu Phi",
+				"Châu Âu",
+				"Châu Á",
+				"Châu chấu"
+			],
+			"answer": "Châu Á"
+		},
+		"quiz9": {
+			"question": "Thăng Long Hà Nội 1000 tuổi vào năm nào? ",
+			"options": [
+				"1996",
+				"2004",
+				"2008",
+				"2010"
+			],
+			"answer": "2010"
 		}
 	}
 }
