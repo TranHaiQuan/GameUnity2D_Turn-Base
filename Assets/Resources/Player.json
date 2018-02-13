@@ -1,6 +1,6 @@
 {
   "Player": {
-    "hp": "50",
+    "hp": "150",
     "damageMax": "20",
     "damageMin": "10"
   }

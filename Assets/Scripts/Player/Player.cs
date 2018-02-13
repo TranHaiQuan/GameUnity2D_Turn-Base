@@ -16,13 +16,21 @@ public class Player : MonoBehaviour {
 	public int currentHp;
 	bool _isWaitFinish;
 	public Text notice;
+	public Text hpTxt;
 	void Start () {
 		gameManager = GameObject.FindGameObjectWithTag ("GameManager").GetComponent<GameManager> ();
 		anim = GetComponent<Animator> ();
 		LoadParameterEnemy ();
-		currentHp = hp; 
+		currentHp = hp;
+		hpTxt.text = currentHp.ToString ();
 	}
-
+	public void ResetGame(){
+		currentHp = hp;
+		float _temp = (float)currentHp / hp;
+		hpImg.fillAmount = _temp;
+		hpTxt.text = currentHp.ToString ();
+		anim.SetBool ("isDead", false);
+	}
 	void SetAnimHit(bool isHit){
 		anim.SetBool ("isHit", isHit);
 	}
@@ -44,26 +52,44 @@ public class Player : MonoBehaviour {
 		} else {
 			notice.text = "-" + damageEnemy;
 		}
+		StartCoroutine (WaitForBlur ());
 		currentHp -= damageEnemy;
+
 		float _temp = (float)currentHp / hp;
 		Debug.Log ("<color=green>temp = " + _temp + "</color>");
 		hpImg.fillAmount = _temp;
 		if (currentHp <= 0) {
 			anim.SetBool ("isDead", true);
 			gameManager.GameOver ();
-			hp = 0;
+			currentHp = 0;
 		} else {
 			SetAnimHit (true);
+		
 			StartCoroutine (WaitForFinishWave ());
 		}
+		hpTxt.text = currentHp.ToString ();
 	}
+	IEnumerator WaitForBlur(){
+		while (notice.color.a < 1) {
+			notice.color = new Color(notice.color.r, notice.color.g, notice.color.b, notice.color.a + 0.1f);
+			yield return new WaitForFixedUpdate ();
+		}
+		yield return new WaitForSeconds (0.5f);
+		while (notice.color.a > 0) {
+			notice.color = new Color(notice.color.r, notice.color.g, notice.color.b, notice.color.a - 0.1f);
+			yield return new WaitForSeconds (0.01f);
+			yield return new WaitForFixedUpdate ();
+		}
 
+	}
 	IEnumerator WaitForFinishWave(){
-		
 		while (!_isWaitFinish) {
 			if(gameManager.isFinishWave){
 				gameManager.CheckLimitQuestion (); // show Boss
 				Debug.Log("<color=blue>Chay vao Finish Wave</color>");
+				if (gameManager.isBoss) {
+					gameManager.CheckVictory ();
+				}
 				_isWaitFinish = true;
 			}
 			yield return new WaitForFixedUpdate();

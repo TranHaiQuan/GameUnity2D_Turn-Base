@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
 
-	public int damageMin, damageMax, hp, totalEnemy, totalQuestion;
+	public int damageMin, damageMax, hp, totalEnemy, totalQuestion, timer, currentTime;
 	public int levelChoosed;
 	public GameObject[] posEnemyArr;
 	public GameObject[] enemyArr;
@@ -39,22 +39,30 @@ public class GameManager : MonoBehaviour {
 	string difficulty;
 	public bool isBoss;
 	bool isFirstBoss;
+	public Text bossWarningTxt;
+	public Text levelFinishTxt;
+	public Text gameOverLevelTxt;
+	public Text levelGameTxt;
+	public Text timerTxt;
 //	string linkApi = "https://opentdb.com/api.php?amount=50&difficulty=medium";
 	void Awake (){
 		difficulty = PlayerPrefs.GetString ("difficulty");
 		if (PlayerPrefs.HasKey("currentLevel")) {
-			indexLevel = PlayerPrefs.GetInt ("currentLevel");
+			indexLevel = PlayerPrefs.GetInt ("currentLevel" + difficulty);
 		}
 		levelChoosed = PlayerPrefs.GetInt ("levelChoosed");
 		player = GameObject.FindGameObjectWithTag ("Hero").GetComponent<Player> ();
 		isFinishWave = true;
-		LoadDataForBoss ("");
-	}
-	void Start () {
-		levelChoosed = 1;
 		LoadParameterEnemy (levelChoosed);
 		SetPositionForEnemy (totalEnemy);
+		LoadDataForBoss ("");
+		levelGameTxt.text = "Level: " + levelChoosed;
+	}
+	void Start () {
+		
 //		StartCoroutine (Request ());
+		currentTime = timer;
+		timerTxt.text = timer.ToString() + "s";
 	}
 
 	public void ChangeCurrentEnemy(){
@@ -70,39 +78,49 @@ public class GameManager : MonoBehaviour {
 
 	public void MyAnswer(GameObject thisAnswer){
 		if (isFinishWave) {
+			StopAllCoroutines ();
 			Debug.Log ("<color=yellow>RandomQuws: " + randomQues);
 			questionIndexList.RemoveAt (randomQues);
 			CheckAnswer (thisAnswer.transform.GetChild (0).gameObject.GetComponent<Text> ().text);
 			isChoosed = true;
 			isFinishWave = false;
-
+			questionAnwsered++;
 			if (!isBoss) {
 				indexCurrentEnemy++;
+
 				if (indexCurrentEnemy >= enemyList.Count) {
 					indexCurrentEnemy = 0;
 				}
 				currentEnemy.GetComponent<Enemy> ().StartAction ();
-				questionAnwsered++;
 				if (questionAnwsered >= totalQuestion && !isDead) {
 					isBoss = true;
+					StartCoroutine (BlinkBossWarning ());
 				}
 			} else {
 				currentEnemy.GetComponent<Boss> ().StartAction ();
 			}
-
 		}
 	}
 
 	public void CheckLimitQuestion(){
 		if (questionAnwsered >= totalQuestion && !isDead && !isFirstBoss) {
 			boss.SetActive (true);
+			questionAnwsered = 0;
 			LoadParameterBoss (levelChoosed);
 			boss.transform.position = posBossStart.transform.position;
 			isFirstBoss = true;
 			StartCoroutine (BlinkSprite ());
 		}
 	}
-
+	IEnumerator BlinkBossWarning(){
+		yield return new WaitForSeconds (1f);
+		for (int i = 0; i < 5; i++) {
+			bossWarningTxt.enabled = true;
+			yield return new WaitForSeconds (0.2f);
+			bossWarningTxt.enabled = false;
+			yield return new WaitForSeconds (0.2f);
+		}
+	}
 	IEnumerator BlinkSprite(){
 		yield return new WaitForSeconds (1f);
 		for (int i = 0; i < enemyList.Count; i++) {
@@ -117,21 +135,73 @@ public class GameManager : MonoBehaviour {
 			enemyList [i].SetActive(false);
 		}
 	}
-		
+
+	public void CheckVictory(){
+		if (questionAnwsered >= totalQuestion && isBoss) {
+			Debug.Log ("<color=green>QuestionAnswer = " + questionAnwsered + " //// total = " + totalQuestion + "</color>");
+			Victory ();
+		}
+	}
 	public void GameOver(){
 		isDead = true;
 		gameoverDialog.SetActive (true);
+		gameOverLevelTxt.text = "Level: " + levelChoosed;
+		StopAllCoroutines ();
 	}
 
 	void Victory() {
-		if (indexLevel == levelChoosed) {
-			indexLevel++;
-			PlayerPrefs.SetInt ("currentLevel", indexLevel);
-		} else {
-			levelChoosed++;
-			PlayerPrefs.SetInt ("levelChoosed", levelChoosed);
-		}
+		levelFinishTxt.text = "Level: " + levelChoosed;
 		victoryDialog.SetActive (true);
+		if (levelChoosed >= indexLevel) {
+			indexLevel++;
+			Debug.Log ("]]]]]]]]]]]]]]]]]]]]]]]>");
+			PlayerPrefs.SetInt ("currentLevel" + difficulty, indexLevel);
+		}
+		StopAllCoroutines ();
+	}
+
+	public void NextLevel(){
+		levelChoosed++;
+		PlayerPrefs.SetInt ("levelChoosed", levelChoosed);
+		if (victoryDialog.activeSelf) {
+			victoryDialog.SetActive (false);
+		}
+		if (gameoverDialog.activeSelf) {
+			gameoverDialog.SetActive (false);
+		}
+		isBoss = false;
+		questionAnwsered = 0;
+		isFinishWave = true;
+		LoadParameterEnemy (levelChoosed);
+		SetPositionForEnemy (totalEnemy);
+		LoadDataForBoss ("");
+		boss.transform.position = posBossStart.transform.position;
+		boss.SetActive (false);
+		player.ResetGame ();
+		isDead = false;
+		isFirstBoss = false;
+		levelGameTxt.text = "Level: " + levelChoosed;
+	}
+
+	public void PlayAgain(){
+		if (victoryDialog.activeSelf) {
+			victoryDialog.SetActive (false);
+		}
+		if (gameoverDialog.activeSelf) {
+			gameoverDialog.SetActive (false);
+		}
+		isBoss = false;
+		questionAnwsered = 0;
+		isFinishWave = true;
+		LoadParameterEnemy (levelChoosed);
+		SetPositionForEnemy (totalEnemy);
+		LoadDataForBoss ("");
+		boss.transform.position = posBossStart.transform.position;
+		boss.SetActive (false);
+		player.ResetGame ();
+		isDead = false;
+		isFirstBoss = false;
+		levelGameTxt.text = "Level: " + levelChoosed;
 	}
 
 	void SetPositionForEnemy(int _totalEnemy){
@@ -158,6 +228,7 @@ public class GameManager : MonoBehaviour {
 		hp = int.Parse(enemyData["level" + level]["hp"].ToString());
 		totalEnemy = int.Parse(enemyData["level" + level]["enemies"].ToString());
 		totalQuestion = int.Parse(enemyData["level" + level]["questions"].ToString());
+		timer = int.Parse(enemyData["level" + level]["time"].ToString());
 	}
 
 	void LoadParameterBoss(int level){ // load chi so cua tung nac level
@@ -167,6 +238,7 @@ public class GameManager : MonoBehaviour {
 		damageMin = int.Parse(bossData["level" + level]["damageMin"].ToString());
 		hp = int.Parse(bossData["level" + level]["hp"].ToString());
 		totalQuestion = int.Parse(bossData["level" + level]["questions"].ToString());
+		timer = int.Parse(bossData["level" + level]["time"].ToString());
 	}
 
 	void LoadJson(string difficulty){
@@ -185,9 +257,16 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void ShowQuestion(){
-		randomQues = Random.Range (0, questionIndexList.Count);
-		Debug.Log ("<color=red>|||||||||||||| random question: </color>" + randomQues);
-		LoadAnswerAndQuestion (levelChoosed + 1, questionIndexList [randomQues]);
+		if (questionAnwsered < totalQuestion) {
+			randomQues = Random.Range (0, questionIndexList.Count);
+			Debug.Log ("<color=red>|||||||||||||| random question: </color>" + randomQues);
+			LoadAnswerAndQuestion (levelChoosed + 1, questionIndexList [randomQues]);
+			currentTime = timer;
+			timerTxt.text = timer.ToString () + "s";
+			currentTime = timer;
+			StopCoroutine (WaitForCountTime ());
+			StartCoroutine (WaitForCountTime ());
+		}
 	}
 
 	public void LoadAnswerAndQuestion(int level, int quesIndex){
@@ -203,6 +282,41 @@ public class GameManager : MonoBehaviour {
 		LoadJson (bossStr + difficulty);
 		AddAllQuestionIndex (levelChoosed + 1);
 		ShowQuestion ();
+
+	}
+
+	IEnumerator WaitForCountTime(){
+		while (currentTime <= timer) {
+			yield return new WaitForSeconds (1);
+			Debug.Log (">>>>>>>>>>>>>>>>>>>>>>");
+			if (currentTime > 0) {
+				currentTime--;
+				timerTxt.text = currentTime.ToString () + "s";
+			} else {
+				break;
+			}
+		}
+		if (isFinishWave) {
+			Debug.Log ("<color=yellow>RandomQuws: " + randomQues);
+			questionIndexList.RemoveAt (randomQues);
+			isAnswer = false;
+			isChoosed = true;
+			isFinishWave = false;
+			questionAnwsered++;
+			if (!isBoss) {
+				indexCurrentEnemy++;
+				if (indexCurrentEnemy >= enemyList.Count) {
+					indexCurrentEnemy = 0;
+				}
+				currentEnemy.GetComponent<Enemy> ().StartAction ();
+				if (questionAnwsered >= totalQuestion && !isDead) {
+					isBoss = true;
+					StartCoroutine (BlinkBossWarning ());
+				}
+			} else {
+				currentEnemy.GetComponent<Boss> ().StartAction ();
+			}
+		}
 	}
 	void CheckAnswer(string answer){
 		if (answer == answerExactly) {
@@ -215,14 +329,6 @@ public class GameManager : MonoBehaviour {
 	}
 	public void BackHome(){
 		SceneManager.LoadScene ("Start");
-	}
-
-	public void PlayAgain(){
-		Debug.Log ("Play Again");
-	}
-
-	public void NextLevel(){
-		Debug.Log ("Next Level");
 	}
 
 	public void RandomDamage(){

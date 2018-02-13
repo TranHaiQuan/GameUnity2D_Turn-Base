@@ -4,27 +4,31 @@
     "damageMin": "10",
     "hp": "15",
     "questions": "2",
-	"enemies" : "2"
+	"enemies" : "2",
+	"time": "15"
   },
   "level2": {
     "damageMax": "17",
     "damageMin": "12",
     "hp": "15",
     "questions": "3",
-	"enemies" : "3"
+	"enemies" : "3",
+	"time": "15"
   },
   "level3": {
     "damageMax": "20",
     "damageMin": "15",
     "hp": "17",
     "questions": "4",
-	"enemies" : "4"
+	"enemies" : "4",
+	"time": "15"
   },
   "level4": {
     "damageMax": "10",
     "damageMin": "15",
     "hp": "17",
     "questions": "5",
-	"enemies" : "5"
+	"enemies" : "5",
+	"time": "15"
   }
 }

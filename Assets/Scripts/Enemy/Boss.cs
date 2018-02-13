@@ -36,6 +36,7 @@ public class Boss : MonoBehaviour {
 		anim.SetBool ("isRun", false);
 		gameManager.LoadDataForBoss ("Boss");
 	}
+
 	public void StartAction(){
 		Debug.Log (isCollisionWithPlayer());
 		if (gameManager.isChoosed) {

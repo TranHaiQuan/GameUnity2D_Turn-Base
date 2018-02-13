@@ -8,27 +8,26 @@ public class UIManager : MonoBehaviour {
 	
 	AudioSource audioGame;
 	public GameObject[] choosedDiff;
-
-	void Awake(){
+	int currentLevel;
+	public GameObject[] level;
+	string difficulty;
+	void Start(){
+//		PlayerPrefs.DeleteAll ();
 		if (PlayerPrefs.HasKey ("difficulty")) {
 			SetActiveChoose ();
 		} else {
 			PlayerPrefs.SetString ("difficulty", "Easy");
 			choosedDiff [0].SetActive (true);
+			difficulty = PlayerPrefs.GetString ("difficulty");
+			Debug.Log ("$$$$$$$$$$$$$$Key = " + difficulty);
 		}
-	}
-
-	void Start(){
+		if (PlayerPrefs.HasKey("currentLevel" + difficulty)) {
+			currentLevel = PlayerPrefs.GetInt ("currentLevel" + difficulty);
+		}
+		ActiveLevel (currentLevel);
 		audioGame = GetComponent<AudioSource> ();
 	}
-	void Update () {
 		
-	}
-
-	public void PlayGame(){
-		SceneManager.LoadScene ("Play");
-	}
-
 	public void ActiveDialog(GameObject dialog){
 		dialog.GetComponent<Animator> ().SetBool ("isActive", true);
 	}
@@ -62,5 +61,31 @@ public class UIManager : MonoBehaviour {
 				choosedDiff [i].SetActive (false);
 			}
 		}
+		difficulty = PlayerPrefs.GetString ("difficulty");
+		if (PlayerPrefs.HasKey("currentLevel" + difficulty)) {
+			currentLevel = PlayerPrefs.GetInt ("currentLevel" + difficulty);
+		}
+		Debug.Log ("currnenenenenenen = " + currentLevel);
+		ActiveLevel (currentLevel);
+	}
+
+	void ActiveLevel(int _currentLevel){
+		
+		for (int j = 0; j < level.Length; j++) {
+			level [j].GetComponent<Button> ().enabled = false;
+			level [j].transform.GetChild (0).gameObject.SetActive (false);
+			level [j].transform.GetChild (2).gameObject.SetActive (true);
+		}
+		for (int i = 0; i <= _currentLevel; i++){
+			level [i].GetComponent<Button> ().enabled = true;
+			level [i].transform.GetChild (0).gameObject.SetActive (true);
+			level [i].transform.GetChild (2).gameObject.SetActive (false);
+		}
+	}
+
+	public void LoadGame(GameObject thisButton){
+		int _levelChoosed = int.Parse(thisButton.transform.GetChild (0).GetComponent<Text> ().text);
+		PlayerPrefs.SetInt ("levelChoosed", _levelChoosed);
+		SceneManager.LoadScene ("Play");
 	}
 }
